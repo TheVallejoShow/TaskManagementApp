@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useElementColors } from "../../hooks/useElementColors";
 
 const FormAddNewProject = ({ onCreate, onClose }) => {
+    const { navigationColor, navigationBgColor } = useElementColors();
     const [name, setName] = useState("");
     const [image, setImage] = useState("");
     const [desc, setDesc] = useState("");
@@ -44,17 +46,18 @@ const FormAddNewProject = ({ onCreate, onClose }) => {
                     className="border px-3 py-2 rounded"
                 />
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex gap-4 mt-6">
                 <button
                     type="button"
                     onClick={onClose}
-                    className="text-gray-600 hover:text-black"
+                    className="w-full py-2 rounded bg-red-100 text-red-600 font-medium hover:bg-red-200 active:scale-95 transition-all shadow-sm"
                 >
                     Cancelar
                 </button>
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    className="w-full py-2 rounded text-white font-medium hover:brightness-110 active:scale-95 transition-all shadow-sm"
+                    style={{ color: navigationColor, backgroundColor: navigationBgColor }}
                 >
                     Crear
                 </button>
