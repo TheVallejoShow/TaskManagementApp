@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import { collection, getDocs, getFirestore, onSnapshot } from "firebase/firestore";
+import { addDoc, collection, getFirestore, onSnapshot } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,6 +25,18 @@ const analytics = getAnalytics(app);
 
 const db = getFirestore();
 
-// export const getProjects = () => getDocs(collection(db, "Projects"));
-
 export const onGetProjects = ( callback ) => onSnapshot(collection(db, "Projects"), callback);
+
+export const addProject = async (projectData) => {
+  try {
+    await addDoc(collection(db, "Projects"), {
+      name: projectData.name,
+      image: projectData.image || "",
+      description: projectData.description || "",
+      tasks: []
+    });
+  } catch (error) {
+    console.error("Error adding project: ", error);
+    throw error;
+  }
+};

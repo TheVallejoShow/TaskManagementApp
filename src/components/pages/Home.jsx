@@ -5,7 +5,7 @@ import ErrorMessage from "../atoms/ErrorMessage";
 import Search from "../atoms/Search";
 import Title from "../atoms/Title";
 
-import { onGetProjects } from "../../db/firebase";
+import { addProject, onGetProjects } from "../../db/firebase";
 import { useState, useEffect } from "react";
 
 const Home = () => {
@@ -14,8 +14,12 @@ const Home = () => {
     const [filteredProjects, setFilteredProjects] = useState(projects);
     const [showModal, setShowModal] = useState(false);
 
-    const handleCreateProject = (newProject) => {
-        setProjects(prev => [...prev, { id: Date.now(), ...newProject }]);
+    const handleCreateProject = async (data) => {
+        try {
+            await addProject(data);
+        } catch (error) {
+            alert("Error al crear el proyecto");
+        }
     };
 
     useEffect(() => {
