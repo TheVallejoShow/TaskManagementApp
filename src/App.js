@@ -1,10 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
+import { UserThemeProvider } from './context/UserThemeContext';
 import Home from './components/pages/Home';
+
+import './App.css';
 
 function App() {
   return (
-    <Home />
+    <UserThemeProvider>
+      <Home />
+    </UserThemeProvider>
   );
 }
 

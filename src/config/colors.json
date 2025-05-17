@@ -1,0 +1,11 @@
+{
+    "custom_titles_color": "#215a6d",
+    "custom_subtitles_color": "#2d2d29",
+    "custom_elements_color": "#92c7a3",
+    "custom_elements_bg_color": "#2d2d29",
+    "custom_elements_hover_color": "##2d2d29",
+    "custom_elements_hover_bg_color": "#92c7a3",
+    "custom_elements_selected_color": "#FFF",
+    "custom_navigation_color": "#2d2d29",
+    "custom_navigation_bg_color": "#dfece6"
+}
