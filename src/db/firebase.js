@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import { addDoc, collection, getFirestore, onSnapshot } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, updateDoc } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -39,4 +39,14 @@ export const addProject = async (projectData) => {
     console.error("Error adding project: ", error);
     throw error;
   }
+};
+
+export const updateProjectName = async (id, newName) => {
+  const projectRef = doc(db, "Projects", id);
+  await updateDoc(projectRef, { name: newName });
+};
+
+export const deleteProject = async (id) => {
+  const projectRef = doc(db, "Projects", id);
+  await deleteDoc(projectRef);
 };

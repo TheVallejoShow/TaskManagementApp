@@ -5,7 +5,7 @@ import ErrorMessage from "../atoms/ErrorMessage";
 import Search from "../atoms/Search";
 import Title from "../atoms/Title";
 
-import { addProject, onGetProjects } from "../../db/firebase";
+import { addProject, onGetProjects, updateProjectName, deleteProject } from "../../db/firebase";
 import { useState, useEffect } from "react";
 
 const Home = () => {
@@ -19,6 +19,22 @@ const Home = () => {
             await addProject(data);
         } catch (error) {
             alert("Error al crear el proyecto");
+        }
+    };
+
+    const handleUpdateName = async (id, newName) => {
+        try {
+            await updateProjectName(id, newName);
+        } catch (error) {
+            console.error("Error actualizando el nombre:", error);
+        }
+    };
+
+    const handleDeleteProject = async (id) => {
+        try {
+            await deleteProject(id);
+        } catch (error) {
+            console.error("Error eliminando proyecto:", error);
         }
     };
 
@@ -61,7 +77,7 @@ const Home = () => {
             {showModal && (
                 <ModalNewProject
                     onClose={() => setShowModal(false)}
-                    onCreate={ handleCreateProject }
+                    onCreate={handleCreateProject}
                 />
             )}
 
@@ -75,6 +91,8 @@ const Home = () => {
                             name={project.name}
                             desc={project.description}
                             amountTasks={project.tasks?.length || 0}
+                            onUpdateName={handleUpdateName}
+                            onDeleteProject={handleDeleteProject}
                         />
                     ))
                 ) : (
