@@ -2,6 +2,8 @@ import ModalNewProject from "../molecules/ModalNewProject";
 import BtnNewProject from "../atoms/BtnNewProject";
 import ProjectBox from "../molecules/ProjectBox";
 import ErrorMessage from "../atoms/ErrorMessage";
+import SuccessAlert from "../atoms/SuccessAlert";
+import ErrorAlert from "../atoms/ErrorAlert";
 import Search from "../atoms/Search";
 import Title from "../atoms/Title";
 
@@ -13,28 +15,36 @@ const Home = () => {
     const [filterText, setFilterText] = useState("");
     const [filteredProjects, setFilteredProjects] = useState(projects);
     const [showModal, setShowModal] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleCreateProject = async (data) => {
         try {
             await addProject(data);
+            setSuccessMessage("Proyecto creado exitosamente");
         } catch (error) {
-            alert("Error al crear el proyecto");
+            console.error(error);
+            setErrorMessage("Error al crear el proyecto");
         }
     };
 
     const handleUpdateName = async (id, newName) => {
         try {
             await updateProjectName(id, newName);
+            setSuccessMessage("Nombre del proyecto actualizado");
         } catch (error) {
-            console.error("Error actualizando el nombre:", error);
+            console.error(error);
+            setErrorMessage("Error actualizando el nombre del proyecto");
         }
     };
 
     const handleDeleteProject = async (id) => {
         try {
             await deleteProject(id);
+            setSuccessMessage("Proyecto eliminado exitosamente");
         } catch (error) {
-            console.error("Error eliminando proyecto:", error);
+            console.error(error);
+            setErrorMessage("Error eliminando el proyecto");
         }
     };
 
@@ -101,6 +111,13 @@ const Home = () => {
                     </div>
                 )}
             </section>
+
+            {successMessage && (
+                <SuccessAlert message={successMessage} onClose={() => setSuccessMessage("")} />
+            )}
+            {errorMessage && (
+                <ErrorAlert message={errorMessage} onClose={() => setErrorMessage("")} />
+            )}
         </div>
     );
 };

@@ -5,11 +5,14 @@ import { useElementColors } from "../../hooks/useElementColors";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState, useRef, useEffect } from "react";
 
+import defaultImage from "../../assets/pictures/noimage.png";
+
 const ProjectBox = ({ id, image, name, desc, amountTasks, onUpdateName, onDeleteProject }) => {
     const { titlesColor, subTitlesColor } = useElementColors();
     const [menuOpen, setMenuOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [imgSrc, setImgSrc] = useState(image || defaultImage);
 
     const buttonRef = useRef(null);
     const menuRef = useRef(null);
@@ -46,10 +49,11 @@ const ProjectBox = ({ id, image, name, desc, amountTasks, onUpdateName, onDelete
     return (
         <div key={id} className="relative bg-white rounded shadow p-4 flex flex-col">
             <img
-                src={image}
+                src={imgSrc}
                 alt={`Imagen del proyecto ${name}`}
                 className="w-full h-32 object-cover rounded mb-3"
                 loading="lazy"
+                onError={() => setImgSrc(defaultImage)}
             />
 
             <div className="absolute top-2 right-2">
