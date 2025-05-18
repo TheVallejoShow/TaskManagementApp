@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, updateDoc } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -67,20 +67,51 @@ export const getProjectById = async (projectId) => {
 };
 
 export const getTasksFromRefs = async (taskRefs) => {
-    const taskDocs = await Promise.all(taskRefs.map(async (taskObj) => {
-    try {
-      const taskRef = doc(db, "Tasks", taskObj.id);
-      const docSnap = await getDoc(taskRef);
-      if (docSnap.exists()) {
-        return { id: docSnap.id, ...docSnap.data() };
-      } else {
+  const taskDocs = await Promise.all(
+    taskRefs.map(async (taskRefOrId) => {
+      try {
+        let taskId;
+
+        // Si es un DocumentReference, extrae el id
+        if (typeof taskRefOrId === "object" && taskRefOrId?.id) {
+          taskId = taskRefOrId.id;
+        } 
+        // Si es un string, úsalo directamente
+        else if (typeof taskRefOrId === "string") {
+          taskId = taskRefOrId;
+        } 
+        // Si no es válido, ignóralo
+        else {
+          console.warn("Referencia inválida de tarea:", taskRefOrId);
+          return null;
+        }
+
+        const taskRef = doc(db, "Tasks", taskId);
+        const docSnap = await getDoc(taskRef);
+
+        if (docSnap.exists()) {
+          return { id: docSnap.id, ...docSnap.data() };
+        } else {
+          return null;
+        }
+      } catch (error) {
+        console.error("Error fetching task:", error);
         return null;
       }
-    } catch (error) {
-      console.error("Error fetching task:", error);
-      return null;
-    }
-  }));
+    })
+  );
 
-  return taskDocs.filter(task => task !== null);
+  return taskDocs.filter((task) => task !== null);
+};
+
+export const createTaskAndLinkToProject = async (projectId, taskData) => {
+  const tasksCollection = collection(db, "Tasks");
+  const taskDoc = await addDoc(tasksCollection, taskData);
+
+  const projectRef = doc(db, "Projects", projectId);
+  await updateDoc(projectRef, {
+    tasks: arrayUnion(taskDoc.id),
+  });
+
+  return taskDoc.id;
 };
