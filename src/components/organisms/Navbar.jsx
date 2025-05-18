@@ -13,7 +13,7 @@ const Navbar = () => {
         color: navigationColor,
       }}
     >
-      <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+      <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity transform hover:scale-105">
         <Icon fontSize="medium">check_circle</Icon>
         <span className="text-lg font-semibold">Task Manager</span>
       </Link>

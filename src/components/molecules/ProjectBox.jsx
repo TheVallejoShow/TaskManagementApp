@@ -3,7 +3,9 @@ import ModalEditName from "./ModalEditName";
 
 import { useElementColors } from "../../hooks/useElementColors";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import defaultImage from "../../assets/pictures/noimage.png";
 
@@ -25,6 +27,12 @@ const ProjectBox = ({ id, image, name, desc, amountTasks, onUpdateName, onDelete
     const openDeleteModal = () => {
         setMenuOpen(false);
         setDeleteModalOpen(true);
+    };
+
+    const navigate = useNavigate();
+
+    const goToProjectDetail = () => {
+        navigate(`/project/${id}`);
     };
 
     useEffect(() => {
@@ -51,9 +59,10 @@ const ProjectBox = ({ id, image, name, desc, amountTasks, onUpdateName, onDelete
             <img
                 src={imgSrc}
                 alt={`Imagen del proyecto ${name}`}
-                className="w-full h-32 object-cover rounded mb-3"
+                className="cursor-pointer w-full h-32 object-cover rounded mb-3"
                 loading="lazy"
                 onError={() => setImgSrc(defaultImage)}
+                onClick={goToProjectDetail}
             />
 
             <div className="absolute top-2 right-2">
@@ -88,7 +97,12 @@ const ProjectBox = ({ id, image, name, desc, amountTasks, onUpdateName, onDelete
             </div>
 
             <div className="flex flex-col justify-between items-center mb-2">
-                <h2 className="w-full text-center text-xl font-semibold" style={{ color: subTitlesColor }}>{name}</h2>
+                <h2 
+                    onClick={goToProjectDetail}
+                    className="cursor-pointer w-full text-center text-xl font-semibold transition-all transform hover:scale-105 active:scale-95" 
+                    style={{ color: subTitlesColor }}>
+                        {name}
+                </h2>
                 <div>
                     <p className="m-2">{desc}</p>
                 </div>
