@@ -19,9 +19,11 @@ const firebaseConfig = {
   measurementId: "G-Y0NX9RH8LR"
 };
 
-// Initialize Firebase
+// eslint-disable-next-line no-unused-vars
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
+
+// eslint-disable-next-line no-unused-vars
+const analytics = getAnalytics(app);
 
 const db = getFirestore();
 
