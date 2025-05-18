@@ -92,7 +92,7 @@ const Home = () => {
             )}
 
             <section className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                {filteredProjects.length > 0 ? (
+                {filteredProjects?.length > 0 ? (
                     filteredProjects.map(project => (
                         <ProjectBox
                             key={project.id}

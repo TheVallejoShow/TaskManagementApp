@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, updateDoc } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -49,4 +49,38 @@ export const updateProjectName = async (id, newName) => {
 export const deleteProject = async (id) => {
   const projectRef = doc(db, "Projects", id);
   await deleteDoc(projectRef);
+};
+
+export const getProjectById = async (projectId) => {
+  try {
+    const docRef = doc(db, "Projects", projectId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    } else {
+      throw new Error("Proyecto no encontrado");
+    }
+  } catch (error) {
+    console.error("Error getting project by ID:", error);
+    throw error;
+  }
+};
+
+export const getTasksFromRefs = async (taskRefs) => {
+    const taskDocs = await Promise.all(taskRefs.map(async (taskObj) => {
+    try {
+      const taskRef = doc(db, "Tasks", taskObj.id);
+      const docSnap = await getDoc(taskRef);
+      if (docSnap.exists()) {
+        return { id: docSnap.id, ...docSnap.data() };
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching task:", error);
+      return null;
+    }
+  }));
+
+  return taskDocs.filter(task => task !== null);
 };
