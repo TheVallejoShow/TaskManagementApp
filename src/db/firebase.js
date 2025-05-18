@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, updateDoc } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -72,15 +72,12 @@ export const getTasksFromRefs = async (taskRefs) => {
       try {
         let taskId;
 
-        // Si es un DocumentReference, extrae el id
         if (typeof taskRefOrId === "object" && taskRefOrId?.id) {
           taskId = taskRefOrId.id;
         } 
-        // Si es un string, úsalo directamente
         else if (typeof taskRefOrId === "string") {
           taskId = taskRefOrId;
         } 
-        // Si no es válido, ignóralo
         else {
           console.warn("Referencia inválida de tarea:", taskRefOrId);
           return null;
@@ -114,4 +111,19 @@ export const createTaskAndLinkToProject = async (projectId, taskData) => {
   });
 
   return taskDoc.id;
+};
+
+export const deleteTask = async (taskId, projectId) => {
+  try {
+    await deleteDoc(doc(db, "Tasks", taskId));
+
+    const projectRef = doc(db, "Projects", projectId);
+    await updateDoc(projectRef, {
+      tasks: arrayRemove({ id: taskId }),
+    });
+
+  } catch (error) {
+    console.error("Error al eliminar la tarea:", error);
+    throw error;
+  }
 };

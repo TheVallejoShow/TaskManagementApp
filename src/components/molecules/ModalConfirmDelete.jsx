@@ -1,13 +1,13 @@
 import { useElementColors } from "../../hooks/useElementColors";
 
-const ModalConfirmDelete = ({ onClose, onConfirm }) => {
+const ModalConfirmDelete = ({ title, onClose, onConfirm }) => {
     const { navigationColor, navigationBgColor } = useElementColors();
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded shadow-md w-96" style={{ maxWidth: "95%" }}>
-                <h3 className="mb-4 text-lg font-semibold text-red-600">
-                    ¿Estás seguro de eliminar este proyecto?
+                <h3 className="text-center mb-4 text-lg font-semibold text-red-600">
+                    { title }
                 </h3>
                 <div className="flex gap-4 mt-3">
                     <button

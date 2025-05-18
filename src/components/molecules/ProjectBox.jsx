@@ -75,7 +75,7 @@ const ProjectBox = ({ id, image, name, desc, amountTasks, onUpdateName, onDelete
                     aria-label="Opciones del proyecto"
                     className="text-gray-500 hover:text-gray-700"
                 >
-                    <MoreVertIcon style={{ marginRight: "-12px", marginTop: "-12px" }}/>
+                    <MoreVertIcon style={{ marginRight: "-12px", marginTop: "-12px" }} />
                 </button>
                 {menuOpen && (
                     <div ref={menuRef} className="absolute right-0 mt-2 bg-white border rounded shadow-md z-10 w-40">
@@ -97,11 +97,11 @@ const ProjectBox = ({ id, image, name, desc, amountTasks, onUpdateName, onDelete
             </div>
 
             <div className="flex flex-col justify-between items-center mb-2">
-                <h2 
+                <h2
                     onClick={goToProjectDetail}
-                    className="cursor-pointer w-full text-center text-xl font-semibold transition-all transform hover:scale-105 active:scale-95" 
+                    className="cursor-pointer w-full text-center text-xl font-semibold transition-all transform hover:scale-105 active:scale-95"
                     style={{ color: subTitlesColor }}>
-                        {name}
+                    {name}
                 </h2>
                 <div>
                     <p className="m-2">{desc}</p>
@@ -124,6 +124,7 @@ const ProjectBox = ({ id, image, name, desc, amountTasks, onUpdateName, onDelete
 
             {deleteModalOpen && (
                 <ModalConfirmDelete
+                    title={"¿Estás seguro de eliminar este proyecto?"}
                     onClose={() => setDeleteModalOpen(false)}
                     onConfirm={() => {
                         onDeleteProject(id);

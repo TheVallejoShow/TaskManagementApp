@@ -1,3 +1,4 @@
+import ModalConfirmDelete from "../molecules/ModalConfirmDelete";
 import ModalNewTask from "../molecules/ModalNewTask";
 import BtnNewElement from "../atoms/BtnNewElement";
 import ErrorMessage from "../atoms/ErrorMessage";
@@ -9,7 +10,7 @@ import Title from "../atoms/Title";
 
 import firestoreTimestampToDate from "../../hooks/useFirestoreTimestampToDate";
 import { PriorityLabels } from "../../enums/priority";
-import { getProjectById, getTasksFromRefs, createTaskAndLinkToProject } from "../../db/firebase";
+import { getProjectById, getTasksFromRefs, createTaskAndLinkToProject, deleteTask } from "../../db/firebase";
 import defaultImage from "../../assets/pictures/noimage.png";
 
 import { useParams } from "react-router-dom";
@@ -26,6 +27,9 @@ const ProjectDetail = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [taskToDelete, setTaskToDelete] = useState(null);
 
     const handleAddTask = () => {
         setIsModalOpen(true);
@@ -44,6 +48,29 @@ const ProjectDetail = () => {
         } catch (error) {
             console.error(error);
             setErrorMessage("Error al crear la tarea");
+        };
+    };
+
+    const handleOpenDeleteModal = (task) => {
+        setTaskToDelete(task);
+        setShowDeleteModal(true);
+    };
+
+    const handleCloseDeleteModal = () => {
+        setTaskToDelete(null);
+        setShowDeleteModal(false);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!taskToDelete) return;
+        try {
+            await deleteTask(taskToDelete.id, project.id);
+            setTasks(prev => prev.filter(task => task.id !== taskToDelete.id));
+            handleCloseDeleteModal();
+            setSuccessMessage("Tarea eliminada exitosamente");
+        } catch (error) {
+            console.error(error);
+            setErrorMessage("Error eliminando la tarea");
         };
     };
 
@@ -146,7 +173,7 @@ const ProjectDetail = () => {
 
                                 <button
                                     className="text-red-600 hover:text-red-800 transition-colors"
-                                    onClick={() => { }}
+                                    onClick={() => handleOpenDeleteModal(task)}
                                     title="Eliminar tarea"
                                 >
                                     🗑️
@@ -166,6 +193,14 @@ const ProjectDetail = () => {
             )}
             {errorMessage && (
                 <ErrorAlert message={errorMessage} onClose={() => setErrorMessage("")} />
+            )}
+
+            {showDeleteModal && (
+                <ModalConfirmDelete
+                    title="¿Eliminar esta tarea?"
+                    onClose={handleCloseDeleteModal}
+                    onConfirm={handleConfirmDelete}
+                />
             )}
         </div>
     );
